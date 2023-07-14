@@ -144,7 +144,7 @@ vif(z_pmhd_levels_12345678)
 
 # Final Housing Model
 ## DV: Rent 30 Percent
-## IVs: All IVs except those that serve as the DVs in the housing models -- z_ACS_PCT_RENT_COST_30PCT, z_ACS_MEDIAN_HOME_VALUE, z_ACS_PCT_OWNED_HH -- as well as the three problematic VIF IVs
+## IVs: Excludes those IVs that serve as DVs in the housing models -- z_ACS_PCT_RENT_COST_30PCT, z_ACS_MEDIAN_HOME_VALUE, z_ACS_PCT_OWNED_HH -- and the three problematic VIF IVs
 ### Note: Building final model below (R markdown housing doc had groupings only)
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -168,7 +168,7 @@ vif(z_rent30_levels_12345678)
 
 # Final Housing Model
 ## DV: Median Home Value
-## IVs: All IVs except those that serve as the DVs in the housing models -- z_ACS_PCT_RENT_COST_30PCT, z_ACS_MEDIAN_HOME_VALUE, z_ACS_PCT_OWNED_HH -- as well as the three problematic VIF IVs
+## IVs: Excludes those IVs that serve as DVs in the housing models -- z_ACS_PCT_RENT_COST_30PCT, z_ACS_MEDIAN_HOME_VALUE, z_ACS_PCT_OWNED_HH -- and the three problematic VIF IVs
 ### Note: Building final model below (R markdown housing doc had groupings only)
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -192,7 +192,7 @@ vif(z_median_levels_12345678)
 
 # Final Housing Model
 ## DV: Owned HH
-## IVs: All IVs except those that serve as the DVs in the housing models -- z_ACS_PCT_RENT_COST_30PCT, z_ACS_MEDIAN_HOME_VALUE, z_ACS_PCT_OWNED_HH -- as well as the three problematic VIF IVs
+## IVs: Excludes those IVs that serve as DVs in the housing models -- z_ACS_PCT_RENT_COST_30PCT, z_ACS_MEDIAN_HOME_VALUE, z_ACS_PCT_OWNED_HH -- and the three problematic VIF IVs
 ### Note: Building final model below (R markdown housing doc had groupings only)
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
