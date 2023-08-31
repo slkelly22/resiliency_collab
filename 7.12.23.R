@@ -2,6 +2,8 @@
 #To do: To address VIF issues, delete three IVs from all the previous models -- z_SVI_RPL_THEMES_ALL, z_ACS_PER_CAPITA_INCOME, z_pfh_percent -- and then rerun the models
 #Full models to rerun: education hsg, education sc, health lbw, health pud, health mud, housing rent, housing median, housing owned
 
+##8.31.23 NOTE: The following HOUSING and HEALTH models do not have the three education IVS added to them (hsg, sc, math); Rather than revise this r syntax file, I just added them directly to the ResiliencyCollabFinalModels quarto file
+
 library(tidyverse)
 library(readxl)
 library(car) #for vif analysis
