@@ -1,3 +1,6 @@
+#9.20.23
+#Business Model
+
 library(tidyverse)
 library(readxl)
 library(car) #for vif analysis
@@ -12,3 +15,10 @@ ggplot(data = Z_and_Final_Variables_10.28.22, mapping = aes(x = z_ACS_GINI_INDEX
 ggplot(data = Z_and_Final_Variables_10.28.22, mapping = aes(x = z_ACS_PCT_WORK_NO_CAR)) + geom_histogram() #nope
 
 ggplot(data = Z_and_Final_Variables_10.28.22, mapping = aes(x = z_unemp_perc)) + geom_histogram() #yes, let's use as the second DV
+
+#just checking the raw variables
+unique(Z_and_Final_Variables_10.28.22$ACS_GINI_INDEX)
+summary(Z_and_Final_Variables_10.28.22$ACS_GINI_INDEX)
+
+unique(Z_and_Final_Variables_10.28.22$unemp_perc)
+summary(Z_and_Final_Variables_10.28.22$unemp_perc)
