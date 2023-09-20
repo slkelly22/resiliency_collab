@@ -25,7 +25,9 @@ glimpse(Z_and_Final_Variables_10.28.22)
 ```
 
 # Final Education Model
+
 ## DV: High School Rate
+
 ## IVs: Demographics, Food/Housing, Technology, Health 1, (DOES NOT INCLUDE health 2), HWCC, Business, Government
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -35,6 +37,7 @@ summary(z_hsg_levels_1234678)
 ```
 
 ## Final Education Model, High School Rate
+
 ## Confidence Intervals
 
 ```{r}
@@ -42,6 +45,7 @@ confint(z_hsg_levels_1234678)
 ```
 
 ## Final Education Model, High School Rate
+
 ## VIF
 
 ```{r}
@@ -49,7 +53,9 @@ vif(z_hsg_levels_1234678)
 ```
 
 # Final Education Model
+
 ## DV: Some College
+
 ## IVs: Demographics, Food/Housing, Technology, Health 1, Health 2, HWCC, Business, Government
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -58,6 +64,7 @@ summary(z_sc_levels_12345678)
 ```
 
 ## Final Education Model, Some College
+
 ## Confidence Intervals
 
 ```{r}
@@ -65,6 +72,7 @@ confint(z_sc_levels_12345678)
 ```
 
 ## Final Education Model, Some College
+
 ## VIF
 
 ```{r}
@@ -72,7 +80,9 @@ vif(z_sc_levels_12345678)
 ```
 
 # Final Health Model
+
 ## DV: Low Birth Weight
+
 ## IVs: Demographics, Health 1, Health 2, Food/Housing, Technology, HWCC, Business, Government
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -81,6 +91,7 @@ summary(z_lbw_levels_12345678)
 ```
 
 ## Final Health Model, Low Birth Weight
+
 ## Confidence Intervals
 
 ```{r}
@@ -88,6 +99,7 @@ confint(z_lbw_levels_12345678)
 ```
 
 # Final Health Model, Low Birth Weight
+
 ## VIF
 
 ```{r}
@@ -95,8 +107,11 @@ vif(z_lbw_levels_12345678)
 ```
 
 # Final Health Model
+
 ## DV: Physically Unhealthy Days
+
 ## IVs: Demographics, Health 1, Health 2, Food/Housing, Technology, HWCC, Business, Government
+
 ### Note: z_pfh_percent was previously excluded from the final physically unhealthy days model
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -105,6 +120,7 @@ summary(z_pphd_levels_12345678)
 ```
 
 ## Final Health Model, Physically Unhealthy Days
+
 ## Confidence Intervals
 
 ```{r}
@@ -112,6 +128,7 @@ confint(z_pphd_levels_12345678)
 ```
 
 ## Final Health Model, Physically Unhealthy Days
+
 ## VIF
 
 ```{r}
@@ -119,8 +136,11 @@ vif(z_pphd_levels_12345678)
 ```
 
 # Final Health Model
+
 ## DV: Mentally Unhealthy Days
+
 ## IVs: Demographics, Health 1, Health 2, Food/Housing, Technology, HWCC, Business, Government
+
 ### Note: z_pfh_percent was previously excluded from the final mentally unhealthy days model
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -129,6 +149,7 @@ summary(z_pmhd_levels_12345678)
 ```
 
 ## Final Health Model, Mentally Unhealthy Days
+
 ## Confidence Intervals
 
 ```{r}
@@ -136,6 +157,7 @@ confint(z_pmhd_levels_12345678)
 ```
 
 ## Final Health Model, Mentally Unhealthy Days
+
 ## VIF
 
 ```{r}
@@ -143,8 +165,11 @@ vif(z_pmhd_levels_12345678)
 ```
 
 # Final Housing Model
+
 ## DV: Rent 30 Percent
+
 ## IVs: Excludes those IVs that serve as DVs in the housing models -- z_ACS_PCT_RENT_COST_30PCT, z_ACS_MEDIAN_HOME_VALUE, z_ACS_PCT_OWNED_HH -- and the three problematic VIF IVs
+
 ### Note: Building final model below (R markdown housing doc had groupings only)
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -153,6 +178,7 @@ summary(z_rent30_levels_12345678)
 ```
 
 ## Final Housing Model, Rent 30 Percent
+
 ## Confidence Intervals
 
 ```{r}
@@ -160,6 +186,7 @@ confint(z_rent30_levels_12345678)
 ```
 
 ## Final Housing Model, Rent 30 Percent
+
 ## VIF
 
 ```{r}
@@ -167,8 +194,11 @@ vif(z_rent30_levels_12345678)
 ```
 
 # Final Housing Model
+
 ## DV: Median Home Value
+
 ## IVs: Excludes those IVs that serve as DVs in the housing models -- z_ACS_PCT_RENT_COST_30PCT, z_ACS_MEDIAN_HOME_VALUE, z_ACS_PCT_OWNED_HH -- and the three problematic VIF IVs
+
 ### Note: Building final model below (R markdown housing doc had groupings only)
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -177,6 +207,7 @@ summary(z_median_levels_12345678)
 ```
 
 ## Final Housing Model, Median Home Value
+
 ## Confidence Intervals
 
 ```{r}
@@ -184,6 +215,7 @@ confint(z_median_levels_12345678)
 ```
 
 ## Final Housing Model, Median Home Value
+
 ## VIF
 
 ```{r}
@@ -191,8 +223,11 @@ vif(z_median_levels_12345678)
 ```
 
 # Final Housing Model
+
 ## DV: Owned HH
+
 ## IVs: Excludes those IVs that serve as DVs in the housing models -- z_ACS_PCT_RENT_COST_30PCT, z_ACS_MEDIAN_HOME_VALUE, z_ACS_PCT_OWNED_HH -- and the three problematic VIF IVs
+
 ### Note: Building final model below (R markdown housing doc had groupings only)
 
 ```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
@@ -201,6 +236,7 @@ summary(z_owned_levels_12345678)
 ```
 
 ## Final Housing Model, Owned HH
+
 ## Confidence Intervals
 
 ```{r}
@@ -208,6 +244,7 @@ confint(z_owned_levels_12345678)
 ```
 
 ## Final Housing Model, Owned HH
+
 ## VIF
 
 ```{r}
