@@ -1,6 +1,6 @@
 ---
-title: "Review of UC Percent Variable"
-subtitle: "9.20.23"
+title: "Updated Review of UC Percent Variable"
+subtitle: "9.21.23"
 format: 
   pdf: 
     fig-width: 7
@@ -29,7 +29,7 @@ summary(Z_and_Final_Variables_10.28.22$uc_percent)
 ```{r}
 Z_and_Final_Variables_10.28.22 %>%
   group_by(State.x) %>%
-  summarize(state_level_ucp = sum(uc_percent)/n()) %>%
+  summarize(state_level_ucp = mean(uc_percent, na.rm = TRUE)) %>%
   arrange(desc(state_level_ucp)) %>%
   head(10) 
 ```
@@ -41,22 +41,42 @@ Z_and_Final_Variables_10.28.22 %>%
 ```{r}
 Z_and_Final_Variables_10.28.22 %>%
   group_by(State.x) %>%
-  summarize(state_level_ucp = sum(uc_percent)/n()) %>%
+  summarize(state_level_ucp = mean(uc_percent, na.rm = TRUE)) %>%
   arrange(desc(state_level_ucp)) %>%
   tail(10) 
 ```
 
+
 ```{r, include = FALSE}
 Z_and_Final_Variables_9.20.23 <- Z_and_Final_Variables_10.28.22 %>%
   group_by(State.x) %>%
-  summarize(state_level_ucp = sum(uc_percent)/n()) %>%
+  summarize(state_level_ucp = mean(uc_percent, na.rm = TRUE)) %>%
   arrange(State.x) 
 
 ```
 
-# Plot of Statwide Averages for uc_percent 
-## Note: No data for HI, IL, KS
+# Plot of Statwide Averages for uc_percent
 
-```{r, echo = FALSE}
+# No data for Kansas
+
+```{r, tidy = TRUE, tidy.opts=list(width.cutoff=60)}
 ggplot(Z_and_Final_Variables_9.20.23, mapping = aes(x = reorder(State.x, state_level_ucp), y = state_level_ucp)) + geom_point() + labs(x = "State", y = "State Averages of UC Percent") + coord_flip()
+```
+
+# Boxplot for county-level uc_percent
+
+```{r, tidy = TRUE, tidy.opts=list(width.cutoff=60)}
+Z_and_Final_Variables_10.28.22 %>%
+  ggplot(mapping = aes(x = reorder(State.x, uc_percent), y = uc_percent)) + geom_boxplot() + labs(x = "State", y = "UC Percent (Raw Metric)") + coord_flip()
+```
+
+```{r}
+Just_IL <- Z_and_Final_Variables_10.28.22 %>%
+  filter(State.x == "il") %>%
+  select(uc_percent)
+```
+
+# Here are the values for the Illinois uc_percent (with the missing NAs excluded)
+```{r}
+ na.omit(Just_IL)
 ```
