@@ -1,0 +1,30 @@
+---
+title: "Resiliency: Business Models"
+author: "S. Kelly"
+format: pdf
+editor: visual
+code-overflow: wrap
+execute: 
+  warning: false
+---
+
+## Business Models, DVs: z_GINI_INDEX and z_unemp_perc
+
+### Loading the Necessary Packages
+```{r}
+library(tidyverse)
+library(readxl)
+library(car) #for vif analysis
+options(scipen = 999)
+```
+
+```{r, include = FALSE}
+Z_and_Final_Variables_10.28.22 <- read.csv("~/Desktop/R Directory/ResiliencyProject/Z_and_Final_Variables_10.28.22.csv")
+```
+
+### Histogram of the z_ACS_GINI_INDEX variable
+
+```{r, echo=FALSE}
+ggplot(data = Z_and_Final_Variables_10.28.22, mapping = aes(x = z_ACS_GINI_INDEX)) + geom_histogram() 
+```
+
