@@ -40,3 +40,11 @@ missing_child <- Z_and_Final_Variables_10.28.22 %>%
   filter(is.na(childelig_lunch_perc)) 
 table(missing_child$State.x) 
 
+
+# Why duplicated in unique? Ah....probably the decimals even though I rounded
+round(unique(Z_and_Final_Variables_10.28.22$childelig_lunch_perc))
+str(Z_and_Final_Variables_10.28.22$childelig_lunch_perc)
+
+check <- Z_and_Final_Variables_10.28.22 %>% 
+  filter(State.x == "il" | State.x == "ms") %>% # yup, IL is garbage
+  select(State.x, childelig_lunch_perc) 
