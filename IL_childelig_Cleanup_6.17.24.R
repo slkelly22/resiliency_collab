@@ -2,7 +2,6 @@
 # June 17, 2024
 
 library(tidyverse)
-library(stringr)
 
 IL_childelig <- read_csv("data/Cafer_IL school lunch FY18.csv")
 
@@ -16,7 +15,7 @@ dim(IL_childelig) #102, 3
 head(IL_childelig)
 
 # Lowercase the county name in order to merge later to the main df
-IL_childelig$County <- tolower(IL_childelig$County)
+IL_childelig$County <- tolower(IL_childelig$County) #this actually didn't matter later because I merged on FIPS
 head(IL_childelig)
 
 # Need to strip the % from county value
@@ -45,6 +44,9 @@ str(IL_childelig)
 
 # Just pulling out the IL column from the main df to make sure the FIPS look right before we merge
 # Most the IL_childelig and the Z_and_Final_Variables datframes have 102 values for Illinois with FIPS 17001 (adams) to 17203 (woodford)
+
+Z_and_Final_Variables_10.28.22 <- read.csv("~/Desktop/R Directory/ResiliencyProject/Z_and_Final_Variables_10.28.22.csv")
+
 quick_check <- Z_and_Final_Variables_10.28.22 %>% 
   filter(State.x == "il") %>% 
   select(FIPS, county)
@@ -71,3 +73,41 @@ attempt2 <- middle_object %>%
 
 attempt2 %>% 
   filter(State.x == "il")
+
+# Okay. Now I'm going to run the code above on the Illinois only data to get is prepared and then I'm going to merge with the main Z_and_final_vars dataset that I've been using and then I'll rename it
+
+# I ran everything from Rows 1 - 52, skipped rows 54 - 76, and now picking back up to join the datasets and then create a new variable
+
+Final_Variables_June_2024 <- left_join(Z_and_Final_Variables_10.28.22, IL_childelig, by = "FIPS") # rows are same, two new columns (county, and childelig)
+
+Final_Variables_June_2024 <- Final_Variables_June_2024 %>% 
+  mutate(new_childelig = case_when(
+    is.na(childelig) ~ childelig_lunch_perc, 
+    TRUE ~ childelig
+  )) #that created the variable that has the *new* Illinois data and the regular data for all the other states
+
+# Deleting the unused county.y variable, and the original childelig_lunch_perc, and corresponding z_score
+Final_Variables_June_2024 <- select(Final_Variables_June_2024, - c(childelig_lunch_perc, z_childelig_lunch_perc, county.y))
+
+View(Final_Variables_June_2024)
+
+# Creating the z-scored version of the new variable
+Final_Variables_June_2024$z_new_childelig <- scale(Final_Variables_June_2024$new_childelig)
+
+Final_Variables_June_2024$z_new_childelig <- as.numeric(Final_Variables_June_2024$z_new_childelig) # this fixes the strange matrix thing that was created with the scale function
+
+View(Final_Variables_June_2024)
+
+summary(Final_Variables_June_2024$z_new_childelig) # mean = 0
+
+sum(is.na(Final_Variables_June_2024$new_childelig)) #227
+sum(is.na(Final_Variables_June_2024$z_new_childelig)) #227
+
+Final_Variables_June_2024 %>% 
+  select(new_childelig, z_new_childelig) %>% 
+  drop_na() %>% 
+  cor() #yup, perfect correlation between new raw score and z_score
+
+# Writing out the new dataset that we'll use in the Food Model (with the new_childelig variable)
+
+write_csv(Final_Variables_June_2024, "Final_Variables_June_2024.csv")
