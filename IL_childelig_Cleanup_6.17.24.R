@@ -58,5 +58,16 @@ head(attempt1)
 
 middle_object <- left_join(attempt1, IL_childelig, by = "FIPS") #3142 observations, yup
 
-middle_object2 <- right_join(attempt1, IL_childelig, by = "FIPS") #Nope, that only kept the 10 IL values
+# Okay...this is finally doing what I want...
 
+glimpse(middle_object)
+
+# Create a new variable with mutate and case_when; when it's missing in the column that only has Illinois, use the original variable, then when it's not missing, use the IL only column
+attempt2 <- middle_object %>% 
+  mutate(newvar = case_when(
+    is.na(childelig) ~ childelig_lunch_perc, 
+    TRUE ~ childelig
+  )) 
+
+attempt2 %>% 
+  filter(State.x == "il")
