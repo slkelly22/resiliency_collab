@@ -1,0 +1,71 @@
+---
+title: "Resiliency Food Model"
+author: "S. Kelly"
+date: "2024-06-20"
+output: html_document
+---
+
+
+```{r, include = F}
+library(tidyverse)
+```
+
+```{r, results = 'hide'}
+# Importing the revised dataset with the 2018 IL data for child_elig
+Final_Variables_June_2024 <-
+read.csv("~/Desktop/R Directory/resiliency_collab/data/Final_Variables_June_2024.csv")
+
+glimpse(Final_Variables_June_2024)
+```
+
+# Food Model
+##DV 1: FI Percent
+
+```{r}
+# Histogram using the z-scored FI Percent
+hist(Final_Variables_June_2024$z_fi_percent)
+```
+
+```{r}
+#just checking the RAW variables (unique only) for FI Percent
+unique(round(Final_Variables_June_2024$fi_percent)) #note:rounded to whole for quicker checks
+summary(Final_Variables_June_2024$fi_percent)
+```
+
+```{r}
+# 206 missing values #Where are the NAs?
+missing_fi_percent <-
+Final_Variables_June_2024 %>% 
+filter(is.na(fi_percent)) # Missing values are Illinois and Kansas
+table(missing_fi_percent$State.x) # IL (101) and KS (105)
+```
+
+# Food Model
+## DV 2: Child Elig Lunch Perc
+## Note: Using New Variable (new_childelig), which incorporated the 2018 IL data
+```{r}
+# Histogram using the z-scored z_new_childelig
+hist(Final_Variables_June_2024$z_new_childelig)
+```
+
+```{r}
+#just checking the RAW variables (unique only) for new_childelig
+unique(round(Final_Variables_June_2024$new_childelig)) # note: rounded to whole for quicker checks
+summary(Final_Variables_June_2024$new_childelig) # 227 missing values
+```
+
+```{r}
+# Where are the NAs? Primarily Kansas and Tenessee
+missing_child <- Final_Variables_June_2024 %>% 
+  filter(is.na(new_childelig)) 
+
+table(missing_child$State.x)
+```
+
+```{r}
+# Did we resolve the strange IL values? Yes.  
+strange_values_child <-
+Final_Variables_June_2024 %>% 
+filter(new_childelig < abs(5))
+table(strange_values_child$State.x)
+```
