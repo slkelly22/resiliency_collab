@@ -1,0 +1,78 @@
+---
+title: "Resiliency Food Model"
+author: "S. Kelly"
+date: "2024-06-03"
+output: pdf_document
+---
+
+```{r, include = F}
+library(tidyverse)
+library(readxl)
+```
+
+```{r, include = F}
+#importing the dataset with the raw and z-variables
+Z_and_Final_Variables_10.28.22 <-
+read.csv("~/Desktop/R Directory/ResiliencyProject/Z_and_Final_Variables_10.28.22.csv")
+
+glimpse(Z_and_Final_Variables_10.28.22)
+```
+
+# Food Model
+## Potential DV 1: FI Percent
+
+```{r}
+hist(Z_and_Final_Variables_10.28.22$z_fi_percent)
+ggplot(data = Z_and_Final_Variables_10.28.22,
+mapping = aes(x = z_fi_percent)) +
+geom_histogram()
+```
+
+```{r}
+#just checking the RAW variables (unique only)
+round(unique(Z_and_Final_Variables_10.28.22$fi_percent)) #note:rounded to whole for quicker checks
+summary(Z_and_Final_Variables_10.28.22$fi_percent)
+```
+
+```{r}
+# 206 missing values #Where are the NAs?
+missing_fi_percent <-
+Z_and_Final_Variables_10.28.22 %>% 
+filter(is.na(fi_percent)) # Missing values are Illinois and Kansas
+table(missing_fi_percent$State.x) # IL (101) and KS (105)
+```
+
+# Food Model
+## Potential DV 2: Child Elig Lunch Perc
+```{r}
+#DV 2: childelig_lunch_perc
+hist(Z_and_Final_Variables_10.28.22$z_childelig_lunch_perc)
+ggplot(data = Z_and_Final_Variables_10.28.22,
+mapping = aes(x = z_childelig_lunch_perc)) +
+geom_histogram()
+```
+
+```{r}
+#just checking the RAW variables (unique only)
+round(unique(Z_and_Final_Variables_10.28.22$childelig_lunch_perc)) # note: rounded to whole for quicker checks
+summary(Z_and_Final_Variables_10.28.22$childelig_lunch_perc) # 227 missing values
+```
+
+```{r}
+# What are those weird low positive and negative values? 
+strange_values_child <-
+Z_and_Final_Variables_10.28.22 %>% 
+filter(childelig_lunch_perc < abs(5))
+table(strange_values_child$State.x)
+```
+```{r}
+strange_values_child$childelig_lunch_perc #what's up with these illinois numbers?
+```
+
+```{r}
+#Where are the NAs? 
+missing_child <-
+Z_and_Final_Variables_10.28.22  %>% 
+filter(is.na(childelig_lunch_perc))
+table(missing_child$State.x)
+```
