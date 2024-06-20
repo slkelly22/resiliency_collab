@@ -8,6 +8,8 @@ output: html_document
 
 ```{r, include = F}
 library(tidyverse)
+library(car) #for vif analysis
+options(scipen = 999)
 ```
 
 ```{r, results = 'hide'}
@@ -19,7 +21,7 @@ glimpse(Final_Variables_June_2024)
 ```
 
 # Food Model
-##DV 1: FI Percent
+## DV 1: FI Percent
 
 ```{r}
 # Histogram using the z-scored FI Percent
@@ -40,9 +42,8 @@ filter(is.na(fi_percent)) # Missing values are Illinois and Kansas
 table(missing_fi_percent$State.x) # IL (101) and KS (105)
 ```
 
-# Food Model
 ## DV 2: Child Elig Lunch Perc
-## Note: Using New Variable (new_childelig), which incorporated the 2018 IL data
+### Note: Using New Variable (new_childelig), which incorporated the 2018 IL data
 ```{r}
 # Histogram using the z-scored z_new_childelig
 hist(Final_Variables_June_2024$z_new_childelig)
@@ -55,7 +56,7 @@ summary(Final_Variables_June_2024$new_childelig) # 227 missing values
 ```
 
 ```{r}
-# Where are the NAs? Primarily Kansas and Tenessee
+# Where are the NAs? Primarily Kansas and Tennessee
 missing_child <- Final_Variables_June_2024 %>% 
   filter(is.na(new_childelig)) 
 
@@ -68,4 +69,389 @@ strange_values_child <-
 Final_Variables_June_2024 %>% 
 filter(new_childelig < abs(5))
 table(strange_values_child$State.x)
+```
+
+# Building the Models
+
+# DV 1: FI Percent
+
+## IV: Demographics (9 variables), DV: FI Percent
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
+z_fi_just_demos <- lm(formula = z_fi_percent ~ z_ACS_PCT_BLACK + z_ACS_PCT_HISPAN + z_SVI_RPL_THEME1_SOCIECO + z_SVI_RPL_THEME2_HH_DISB + z_SVI_RPL_THEME3_MINO + z_SVI_RPL_THEME4_HH_TRANS + z_ACS_PCT_ENGL_NOT_WELL + z_ACS_PCT_NON_CITIZEN + z_ACS_MEDIAN_AGE, data = Final_Variables_June_2024) 
+summary(z_fi_just_demos)
+```
+
+## Confidence Intervals for Demographic IVs
+
+```{r}
+confint(z_fi_just_demos)
+```
+
+## VIF for Demographic IVs
+
+```{r}
+vif(z_fi_just_demos)
+```
+
+## IV: Food & Housing (12 variables), DV: FI Percent
+### Note: FI Percent and Child Lunch Elig Removed from IVs
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=50)}
+z_fi_just_foodhouse <- lm(formula = z_fi_percent ~ z_food_afford + z_fd_enviro_indx + z_ACS_PCT_FOOD_STAMP + z_shp_percent + z_shcb_percent + z_ACS_PCT_NO_VEH + z_ACS_PCT_RENTER_HH_CHILD + z_ACS_PCT_RENT_COST_30PCT + z_ACS_PCT_MOBILE_HOME + z_ACS_PCT_OWNED_HH + z_ACS_PCT_OWNER_HH_CHILD + z_ACS_MEDIAN_HOME_VALUE, data = Final_Variables_June_2024)
+summary(z_fi_just_foodhouse)
+```
+## Confidence Intervals for Food & Housing IVs
+
+```{r}
+confint(z_fi_just_foodhouse)
+```
+
+## VIF for Food & Housing IVs
+
+```{r}
+vif(z_fi_just_foodhouse)
+```
+
+## IV: Education (3 variables), DV: FI Percent
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
+z_fi_just_ed <- lm(formula = z_fi_percent ~ z_hsg_rate + z_sc_percent + z_ms_average, data = Final_Variables_June_2024)
+summary(z_fi_just_ed)
+```
+
+## Confidence Intervals for Education IVs
+
+```{r}
+confint(z_fi_just_ed)
+```
+
+## VIF for Education IVs
+
+```{r}
+vif(z_fi_just_ed)
+```
+
+## IV: Technology (3 variables), DV: FI Percent
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
+z_fi_just_tech <- lm(formula = z_fi_percent ~ z_ACS_PCT_NO_PC + z_ACS_PCT_SMARTPHONE + z_ACS_PCT_BROADBAND, data = Final_Variables_June_2024)
+summary(z_fi_just_tech)
+```
+## Confidence Intervals for Technology IVs
+
+```{r}
+confint(z_fi_just_tech)
+```
+
+## VIF for Technology IVs
+
+```{r}
+vif(z_fi_just_tech)
+```
+
+## IV: HWCC (7 variables), DV: FI Percent
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
+z_fi_just_HWCC <- lm(formula = z_fi_percent ~ z_pphd_avgnum + z_pmhd_avgnum + z_lbw_percent_lbw + z_pi_phy_inact + z_cip_perc + z_csph_perc + z_ACS_PCT_CHILD_DISAB, data = Final_Variables_June_2024)
+summary(z_fi_just_HWCC)
+```
+
+## Confidence Intervals for HWCC IVs
+
+```{r}
+confint(z_fi_just_HWCC)
+```
+
+## VIF for HWCC IVs
+
+```{r}
+vif(z_fi_just_HWCC)
+```
+
+## IV: Health A (6 variables), DV: FI Percent
+
+```{r, tidy=TRUE, tidy.opts= list(width.cutoff = 60)}
+z_fi_just_healthA <- lm(formula = z_fi_percent ~ z_phys_per_cap + z_mhp_per_cap + z_dents_per_cap + z_uninsur_perc + z_opcp_rate + z_TeenBirths, data = Final_Variables_June_2024)
+summary(z_fi_just_healthA)
+```
+
+## Confidence Intervals for Health A IVs
+
+```{r}
+confint(z_fi_just_healthA)
+```
+
+## VIF for Health A IVs
+
+```{r}
+vif(z_fi_just_healthA)
+```
+
+## IV: Health B (5 variables), DV: FI Percent
+
+```{r, tidy=TRUE, tidy.opts= list(width.cutoff = 60)}
+z_fi_just_healthB <- lm(formula = z_fi_percent ~ z_phs_rate + z_ms_perc_ann + z_AMFAR_AMATFAC + z_MP_PERCPEN + z_AHRF_RURAL_H_CLINIC, data = Final_Variables_June_2024)
+summary(z_fi_just_healthB)
+```
+
+## Confidence Intervals for Health B IVs
+
+```{r}
+confint(z_fi_just_healthB)
+```
+
+## VIF for Health B IVs
+
+```{r}
+vif(z_fi_just_healthB)
+```
+
+## IV: Business (4 variables), DV: FI Percent
+
+```{r, tidy=TRUE, tidy.opts= list(width.cutoff = 60)}
+z_fi_just_bus <- lm(formula = z_fi_percent ~ z_ACS_MEDIAN_HH_INCOME + z_ACS_PCT_WORK_NO_CAR + z_ACS_GINI_INDEX + z_unemp_perc, data = Final_Variables_June_2024)
+summary(z_fi_just_bus)
+```
+
+## Confidence Intervals for Business IVs
+
+```{r}
+confint(z_fi_just_bus)
+```
+
+## VIF for Business IVs
+
+```{r}
+vif(z_fi_just_bus)
+```
+
+## IV: Government (5 variables), DV: FI Percent
+
+```{r, tidy=TRUE, tidy.opts= list(width.cutoff = 60)}
+z_fi_just_gov <- lm(formula = z_fi_percent ~ z_soc_assoc_num + z_aeo_perc_w_acc + z_dwv_presence + z_ACS_PCT_HH_PUB_ASSIST + z_AHRF_TXC_SITE_NO_CNTRL, data = Final_Variables_June_2024)
+summary(z_fi_just_gov)
+```
+
+## Confidence Intervals for Government IVs
+
+```{r}
+confint(z_fi_just_gov)
+```
+
+## VIF for Government IVs
+
+```{r}
+vif(z_fi_just_gov)
+```
+
+# Final Food Model, DV: FI Percent; IVs: 54
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff = 60)}
+z_fi_levels_12345678 <- lm(formula = z_fi_percent ~ z_ACS_PCT_BLACK + z_ACS_PCT_HISPAN + z_SVI_RPL_THEME1_SOCIECO + z_SVI_RPL_THEME2_HH_DISB + z_SVI_RPL_THEME3_MINO + z_SVI_RPL_THEME4_HH_TRANS + z_ACS_PCT_ENGL_NOT_WELL + z_ACS_PCT_NON_CITIZEN + z_ACS_MEDIAN_AGE + z_food_afford + z_fd_enviro_indx + z_ACS_PCT_FOOD_STAMP + z_shp_percent + z_shcb_percent + z_ACS_PCT_NO_VEH + z_ACS_PCT_RENTER_HH_CHILD + z_ACS_PCT_RENT_COST_30PCT + z_ACS_PCT_MOBILE_HOME + z_ACS_PCT_OWNED_HH + z_ACS_PCT_OWNER_HH_CHILD + z_ACS_MEDIAN_HOME_VALUE + z_hsg_rate + z_sc_percent + z_ms_average + z_ACS_PCT_NO_PC + z_ACS_PCT_SMARTPHONE + z_ACS_PCT_BROADBAND + z_pphd_avgnum + z_pmhd_avgnum + z_lbw_percent_lbw + z_pi_phy_inact + z_cip_perc + z_csph_perc + z_ACS_PCT_CHILD_DISAB + z_phys_per_cap + z_mhp_per_cap + z_dents_per_cap + z_uninsur_perc + z_opcp_rate + z_TeenBirths + z_phs_rate + z_ms_perc_ann + z_AMFAR_AMATFAC + z_MP_PERCPEN + z_AHRF_RURAL_H_CLINIC + z_ACS_MEDIAN_HH_INCOME + z_ACS_PCT_WORK_NO_CAR + z_ACS_GINI_INDEX + z_unemp_perc + z_soc_assoc_num + z_aeo_perc_w_acc + z_dwv_presence + z_ACS_PCT_HH_PUB_ASSIST + z_AHRF_TXC_SITE_NO_CNTRL, data = Final_Variables_June_2024)
+summary(z_fi_levels_12345678)
+```
+
+## Confidence Intervals for Final Model
+
+```{r}
+confint(z_fi_levels_12345678)
+```
+
+## VIF for Final Model
+
+```{r}
+vif(z_fi_levels_12345678)
+```
+
+# DV 2: Child Elig Lunch Perc
+### Note: Using New Variable (z_new_childelig), which incorporated the 2018 IL data
+
+## IV: Demographics (9 variables), DV: Child Elig Lunch Perc
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
+z_ce_just_demos <- lm(formula = z_new_childelig ~ z_ACS_PCT_BLACK + z_ACS_PCT_HISPAN + z_SVI_RPL_THEME1_SOCIECO + z_SVI_RPL_THEME2_HH_DISB + z_SVI_RPL_THEME3_MINO + z_SVI_RPL_THEME4_HH_TRANS + z_ACS_PCT_ENGL_NOT_WELL + z_ACS_PCT_NON_CITIZEN + z_ACS_MEDIAN_AGE, data = Final_Variables_June_2024) 
+summary(z_ce_just_demos)
+```
+
+## Confidence Intervals for Demographic IVs
+
+```{r}
+confint(z_ce_just_demos)
+```
+
+## VIF for Demographic IVs
+
+```{r}
+vif(z_ce_just_demos)
+```
+
+## IV: Food & Housing (12 variables), DV: Child Elig Lunch Perc
+### Note: FI Percent and Child Lunch Elig Removed from IVs
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=50)}
+z_ce_just_foodhouse <- lm(formula = z_new_childelig ~ z_food_afford + z_fd_enviro_indx + z_ACS_PCT_FOOD_STAMP + z_shp_percent + z_shcb_percent + z_ACS_PCT_NO_VEH + z_ACS_PCT_RENTER_HH_CHILD + z_ACS_PCT_RENT_COST_30PCT + z_ACS_PCT_MOBILE_HOME + z_ACS_PCT_OWNED_HH + z_ACS_PCT_OWNER_HH_CHILD + z_ACS_MEDIAN_HOME_VALUE, data = Final_Variables_June_2024)
+summary(z_ce_just_foodhouse)
+```
+## Confidence Intervals for Food & Housing IVs
+
+```{r}
+confint(z_ce_just_foodhouse)
+```
+
+## VIF for Food & Housing IVs
+
+```{r}
+vif(z_ce_just_foodhouse)
+```
+
+## IV: Education (3 variables), DV: Child Elig Lunch Perc
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
+z_ce_just_ed <- lm(formula = z_new_childelig ~ z_hsg_rate + z_sc_percent + z_ms_average, data = Final_Variables_June_2024)
+summary(z_ce_just_ed)
+```
+
+## Confidence Intervals for Education IVs
+
+```{r}
+confint(z_ce_just_ed)
+```
+
+## VIF for Education IVs
+
+```{r}
+vif(z_ce_just_ed)
+```
+
+## IV: Technology (3 variables), DV: Child Elig Lunch Perc
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
+z_ce_just_tech <- lm(formula = z_new_childelig ~ z_ACS_PCT_NO_PC + z_ACS_PCT_SMARTPHONE + z_ACS_PCT_BROADBAND, data = Final_Variables_June_2024)
+summary(z_ce_just_tech)
+```
+## Confidence Intervals for Technology IVs
+
+```{r}
+confint(z_ce_just_tech)
+```
+
+## VIF for Technology IVs
+
+```{r}
+vif(z_ce_just_tech)
+```
+
+## IV: HWCC (7 variables), DV: Child Elig Lunch Perc
+
+```{r, tidy = TRUE, tidy.opts = list(width.cutoff=60)}
+z_ce_just_HWCC <- lm(formula = z_new_childelig ~ z_pphd_avgnum + z_pmhd_avgnum + z_lbw_percent_lbw + z_pi_phy_inact + z_cip_perc + z_csph_perc + z_ACS_PCT_CHILD_DISAB, data = Final_Variables_June_2024)
+summary(z_ce_just_HWCC)
+```
+
+## Confidence Intervals for HWCC IVs
+
+```{r}
+confint(z_ce_just_HWCC)
+```
+
+## VIF for HWCC IVs
+
+```{r}
+vif(z_ce_just_HWCC)
+```
+
+## IV: Health A (6 variables), DV: Child Elig Lunch Perc
+
+```{r, tidy=TRUE, tidy.opts= list(width.cutoff = 60)}
+z_ce_just_healthA <- lm(formula = z_new_childelig ~ z_phys_per_cap + z_mhp_per_cap + z_dents_per_cap + z_uninsur_perc + z_opcp_rate + z_TeenBirths, data = Final_Variables_June_2024)
+summary(z_ce_just_healthA)
+```
+
+## Confidence Intervals for Health A IVs
+
+```{r}
+confint(z_ce_just_healthA)
+```
+
+## VIF for Health A IVs
+
+```{r}
+vif(z_ce_just_healthA)
+```
+
+## IV: Health B (5 variables), DV: Child Elig Lunch Perc
+
+```{r, tidy=TRUE, tidy.opts= list(width.cutoff = 60)}
+z_ce_just_healthB <- lm(formula = z_new_childelig ~ z_phs_rate + z_ms_perc_ann + z_AMFAR_AMATFAC + z_MP_PERCPEN + z_AHRF_RURAL_H_CLINIC, data = Final_Variables_June_2024)
+summary(z_ce_just_healthB)
+```
+
+## Confidence Intervals for Health B IVs
+
+```{r}
+confint(z_ce_just_healthB)
+```
+
+## VIF for Health B IVs
+
+```{r}
+vif(z_ce_just_healthB)
+```
+
+## IV: Business (4 variables), DV: Child Elig Lunch Perc
+
+```{r, tidy=TRUE, tidy.opts= list(width.cutoff = 60)}
+z_ce_just_bus <- lm(formula = z_new_childelig ~ z_ACS_MEDIAN_HH_INCOME + z_ACS_PCT_WORK_NO_CAR + z_ACS_GINI_INDEX + z_unemp_perc, data = Final_Variables_June_2024)
+summary(z_ce_just_bus)
+```
+
+## Confidence Intervals for Business IVs
+
+```{r}
+confint(z_ce_just_bus)
+```
+
+## VIF for Business IVs
+
+```{r}
+vif(z_ce_just_bus)
+```
+
+## IV: Government (5 variables), DV: Child Elig Lunch Perc
+
+```{r, tidy=TRUE, tidy.opts= list(width.cutoff = 60)}
+z_ce_just_gov <- lm(formula = z_new_childelig ~ z_soc_assoc_num + z_aeo_perc_w_acc + z_dwv_presence + z_ACS_PCT_HH_PUB_ASSIST + z_AHRF_TXC_SITE_NO_CNTRL, data = Final_Variables_June_2024)
+summary(z_ce_just_gov)
+```
+
+## Confidence Intervals for Government IVs
+
+```{r}
+confint(z_ce_just_gov)
+```
+
+## VIF for Government IVs
+
+```{r}
+vif(z_ce_just_gov)
+```
+
+# Final Food Model, DV: Child Elig Lunch Perc; IVs: 54
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff = 60)}
+z_ce_levels_12345678 <- lm(formula = z_new_childelig ~ z_ACS_PCT_BLACK + z_ACS_PCT_HISPAN + z_SVI_RPL_THEME1_SOCIECO + z_SVI_RPL_THEME2_HH_DISB + z_SVI_RPL_THEME3_MINO + z_SVI_RPL_THEME4_HH_TRANS + z_ACS_PCT_ENGL_NOT_WELL + z_ACS_PCT_NON_CITIZEN + z_ACS_MEDIAN_AGE + z_food_afford + z_fd_enviro_indx + z_ACS_PCT_FOOD_STAMP + z_shp_percent + z_shcb_percent + z_ACS_PCT_NO_VEH + z_ACS_PCT_RENTER_HH_CHILD + z_ACS_PCT_RENT_COST_30PCT + z_ACS_PCT_MOBILE_HOME + z_ACS_PCT_OWNED_HH + z_ACS_PCT_OWNER_HH_CHILD + z_ACS_MEDIAN_HOME_VALUE + z_hsg_rate + z_sc_percent + z_ms_average + z_ACS_PCT_NO_PC + z_ACS_PCT_SMARTPHONE + z_ACS_PCT_BROADBAND + z_pphd_avgnum + z_pmhd_avgnum + z_lbw_percent_lbw + z_pi_phy_inact + z_cip_perc + z_csph_perc + z_ACS_PCT_CHILD_DISAB + z_phys_per_cap + z_mhp_per_cap + z_dents_per_cap + z_uninsur_perc + z_opcp_rate + z_TeenBirths + z_phs_rate + z_ms_perc_ann + z_AMFAR_AMATFAC + z_MP_PERCPEN + z_AHRF_RURAL_H_CLINIC + z_ACS_MEDIAN_HH_INCOME + z_ACS_PCT_WORK_NO_CAR + z_ACS_GINI_INDEX + z_unemp_perc + z_soc_assoc_num + z_aeo_perc_w_acc + z_dwv_presence + z_ACS_PCT_HH_PUB_ASSIST + z_AHRF_TXC_SITE_NO_CNTRL, data = Final_Variables_June_2024)
+summary(z_ce_levels_12345678)
+```
+
+## Confidence Intervals for Final Model
+
+```{r}
+confint(z_ce_levels_12345678)
+```
+
+## VIF for Final Model
+
+```{r}
+vif(z_ce_levels_12345678)
 ```
